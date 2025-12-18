@@ -1,0 +1,38 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Run Python script
+      env:
+        TEST_NUMBER: ${{ secrets.TEST_NUMBER }}
+      run: |
+        python main.py << EOF
+        $TEST_NUMBER
+        EOF
+    
+    - name: Build Docker image
+      run: docker build -t simplepytest:${{ github.sha }} .
+    
+    - name: Run Docker container
+      env:
+        TEST_NUMBER: ${{ secrets.TEST_NUMBER }}
+      run: |
+        docker run -e TEST_NUMBER="$TEST_NUMBER" simplepytest:${{ github.sha }} python main.py << EOF
+        $TEST_NUMBER
+        EOF
