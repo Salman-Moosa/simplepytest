@@ -12,27 +12,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-    
-    - name: Run Python script
-      env:
-        TEST_NUMBER: ${{ secrets.TEST_NUMBER }}
-      run: |
-        python main.py << EOF
-        $TEST_NUMBER
-        EOF
-    
+
     - name: Build Docker image
-      run: docker build -t simplepytest:${{ github.sha }} .
-    
-    - name: Run Docker container
+      run: docker build -t simplepytest .
+
+    - name: Run Docker container with TEST_NUMBER
       env:
         TEST_NUMBER: ${{ secrets.TEST_NUMBER }}
       run: |
-        docker run -e TEST_NUMBER="$TEST_NUMBER" simplepytest:${{ github.sha }} python main.py << EOF
-        $TEST_NUMBER
-        EOF
+        docker run -e TEST_NUMBER="$TEST_NUMBER" simplepytest
