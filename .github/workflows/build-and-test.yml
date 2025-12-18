@@ -6,6 +6,7 @@ on:
   pull_request:
     branches: [ master ]
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,6 +19,6 @@ jobs:
 
     - name: Run Docker container with TEST_NUMBER
       env:
-        TEST_NUMBER: ${{ secrets.TEST_NUMBER }}
+        TEST_NUMBER: ${{ vars.TEST_NUMBER }}
       run: |
         docker run -e TEST_NUMBER="$TEST_NUMBER" simplepytest
