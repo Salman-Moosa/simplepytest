@@ -12,7 +12,7 @@ def check_number(number):
         return f"{number} is ZERO"
 
 def main():
-    # Try to get number from environment variable first
+
     number_str = os.getenv('TEST_NUMBER')
     if number_str is None:
         try:
