@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
@@ -27,4 +28,13 @@ def check():
         return jsonify({"error": "invalid number"}), 400
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=3000)
+    test_number = os.getenv("TEST_NUMBER")
+
+    if test_number is not None:
+        try:
+            number = float(test_number)
+            print(check_number(number))
+        except ValueError:
+            print("ERROR: invalid number")
+    else:
+        app.run(host="0.0.0.0", port=3000)
